@@ -1,8 +1,9 @@
 jekyll=bundle exec jekyll
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
+ARTIFACTHUB_SCRIPT_DIR := $(REPO_ROOT)/assets/scripts
 
 site:
-	bundle install; $(jekyll) serve --drafts --incremental
-# --livereload 
+	bundle install; $(jekyll) serve --drafts --incremental --livereload --config _config_dev.yml
 
 build:
 	$(jekyll) build --drafts
@@ -19,3 +20,7 @@ docker-logs:
 .PHONY: helm-repo-update
 helm-repo-update:
 	helm repo index charts
+
+.PHONY: artifacthub-artifacts
+artifacthub-artifacts:
+	cd $(ARTIFACTHUB_SCRIPT_DIR); go run hub.go

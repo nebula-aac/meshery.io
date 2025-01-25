@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
       - name: Set env
@@ -41,6 +41,10 @@ jobs:
           else
             echo "No Filters to delete"
           fi
+
+      - name: Pull changes from remote
+        run: git pull origin master
+
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:

@@ -9,8 +9,9 @@
 
 <br/><br/></p>
 </picture>
- 
-# Meshery.io
+
+## Meshery.io
+
 <div align="center">
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/layer5/meshery.svg)](https://hub.docker.com/r/layer5/meshery-io)
@@ -40,6 +41,7 @@ For further information, refer to the [Meshery Docs](https://docs.meshery.io).
 <div>&nbsp;</div>
 
 ## 💻Tech Stack
+
 ![Javascript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
@@ -75,7 +77,7 @@ Find out more about the <a href="https://layer5.io/community#meshmate">Layer5 co
 
 <p>
 ✔️ <em><strong>Join</strong></em> any or all of the weekly meetings on the <a href="https://calendar.google.com/calendar/b/1?cid=bGF5ZXI1LmlvX2VoMmFhOWRwZjFnNDBlbHZvYzc2MmpucGhzQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20">community calendar</a>.<br />
-✔️ <em><strong>Watch</strong></em> community <a href="https://www.youtube.com/playlist?list=PL3A-A6hPO2IMPPqVjuzgqNU5xwnFFn3n0">meeting recordings</a>.<br />
+✔️ <em><strong>Watch</strong></em> community <a href="https://www.youtube.com/Layer5io?sub_confirmation=1">meeting recordings</a>.<br />
 ✔️ <em><strong>Access</strong></em> the <b>Community Drive</b>-by completing a community <a href="https://layer5.io/newcomer">Member Form</a>.<br />
 ✔️ <em><strong>Discuss</strong></em> in the <a href="https://discuss.layer5.io">Community Forum</a>.<br />
 ✔️ <em><strong>RSVP</strong></em> to the <a href="https://community.cncf.io/meshery-community/">CNCF Meshery Community</a> meetings.<br />
@@ -118,7 +120,7 @@ Before contributing, please review the [Contribution Flow](https://github.com/me
 
 ### 4. Create a Pull Request
 
-- After making changes, don't forget to commit with the sign-off flag (-s)!
+- After making changes, don't forget to commit with the sign-off flag (-s)
   ```bash
   $ git commit -s -m “my commit message w/signoff”
   ```
@@ -126,10 +128,19 @@ Before contributing, please review the [Contribution Flow](https://github.com/me
   ```bash
   $ git push origin <branch-name>
   ```
-- Then on Github, navigate to the [Meshery.io repository](https://github.com/meshery/meshery.io) and create a pull request from your recently pushed changes!
+- Then on Github, navigate to the [Meshery.io repository](https://github.com/meshery/meshery.io) and create a pull request from your recently pushed changes.
 
-                                                                                                   
+### Stargazers
+
+<p align="center">
+  <i>If you like Meshery, please <a href="../../stargazers">★</a> star this repository to show your support! 🤩</i>
+ <br />
+<a href="../../stargazers">
+ <img align="center" src="https://api.star-history.com/svg?repos=meshery/meshery.io&type=Date" />
+</a></p>
 
 #### License
 
 This repository and site are available as open source under the terms of the [Apache 2.0 License](https://opensource.org/licenses/Apache-2.0).
+
+[🔼Back to top](#mesheryio)
