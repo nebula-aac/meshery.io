@@ -9,116 +9,50 @@ jobs:
   UpdateCloudNativeCatalog:
     runs-on: ubuntu-22.04
     outputs:
-      designID: ${{ steps.update_catalog_patterns.outputs.designID }}
-      assetLocation: ${{ steps.update_catalog_patterns.outputs.assetLocation }}
+      contentID: ${{ steps.update_catalog_patterns.outputs.contentID }}
     steps:
-      - name: Checkout Code
+      - name: Checkout meshery.io repo
         uses: actions/checkout@v4
         with:
+          path: meshery.io
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Checkout meshery/meshery repo
+        uses: actions/checkout@v4
+        with:
+          repository: meshery/meshery
+          path: meshery
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
       - name: Set env
-        run : |
-          echo "MESHERY_CLOUD_BASE_URL=https://meshery.layer5.io" >> $GITHUB_ENV
-          echo "MESHERY_CATALOG_FILES_DIR=catalog" >> $GITHUB_ENV
-      - name: Cleanup
         run: |
-          find $MESHERY_CATALOG_FILES_DIR ! -name 'index.html' -maxdepth 1 -type f -delete
+          echo "MESHERY_CLOUD_BASE_URL=https://cloud.layer5.io" >> $GITHUB_ENV
+          echo "MESHERY_CATALOG_FILES_DIR=catalog" >> $GITHUB_ENV
+
+      - name: Cleanup
+        working-directory: ./meshery.io
+        run: |
+          find $MESHERY_CATALOG_FILES_DIR ! -name 'index.html' ! -name 'artifacthub-repo.yml' -maxdepth 1 -type f -delete
           cd ./collections/_catalog
           for dir in */; do find $dir -maxdepth 1 -type f -delete; done
           cd ../../
+
       - id: update_catalog_patterns
-        name: Update Catalog Patterns
-        shell: bash
-        if: ${{ success() }}
+        name: Update Catalog Patterns in Go
+        working-directory: ./meshery.io/assets/artifact-hub-pkg
         run: |
-          catalogPatterns=$(curl -sS "$MESHERY_CLOUD_BASE_URL/api/catalog/content/pattern" 2>./err.txt)
-          if [[ "$(<err.txt)" != "" ]]; then
-            >&2 echo "Error connecting to Meshery Cloud"
-            >&2 echo "$(<err.txt)"
-          fi
-          echo "$catalogPatterns" | jq -r '.patterns' > temp.json
-          patternCount=$(echo "$catalogPatterns" | jq '.total_count')
-          echo "Found $patternCount catalog patterns"
+          go run package.go
+        env:
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
 
-          for (( idx=0; idx<$patternCount; idx++ ))
-          do
-            designId=$(jq -r .[$idx].id temp.json)
-            patternInfo="$(jq -r .[$idx].catalog_data.pattern_info temp.json)"
-            patternCaveats="$(jq -r .[$idx].catalog_data.pattern_caveats temp.json)"
-            patternType="$(jq -r .[$idx].catalog_data.type temp.json)"
-            patternName="$(jq -r .[$idx].name temp.json)"
-            patternImageURL="$(jq -r .[$idx].catalog_data.imageURL temp.json)"
-            compatibility=""
-            echo "designID=$designId" >> $GITHUB_OUTPUT
-            echo "assetLocation=$patternImageURL" >> $GITHUB_OUTPUT
-            # check if directory doesn't exists; then create it
-            if [ ! -d "./collections/_catalog/"$(echo $patternType | tr '[:upper:]' '[:lower:]')"" ]; then
-              echo "$(echo $patternType | tr '[:upper:]' '[:lower:]') doesn't exist."
-              echo "Creating directory...$(echo $patternType | tr '[:upper:]' '[:lower:]')"
-              mkdir "./collections/_catalog/"$(echo $patternType | tr '[:upper:]' '[:lower:]')""
-            fi
-
-            if [[ $patternInfo == "null" ]]; then
-              patternInfo="\"\""
-            fi
-
-            if [[ $patternCaveats == "null" ]]; then
-              patternCaveats="\"\""
-            fi
-
-            if [[ $patternType == "null" ]]; then
-              patternType="Deployment"
-            fi
-
-            compatLength=$(jq -r ".[$idx].catalog_data.compatibility | length" temp.json)
-
-            for (( compatIdx=0; compatIdx<$compatLength; compatIdx++ ))
-            do
-              compatibility+="
-              "
-              compatibility+="    - $(jq -r ".[$idx].catalog_data.compatibility[$compatIdx]" temp.json)"
-            done
-
-            patternFile="$(jq -r .[$idx].pattern_file temp.json)"
-            echo "$patternFile" > $MESHERY_CATALOG_FILES_DIR/$designId.yaml
-
-            userId=$(jq -r .[$idx].user_id temp.json)
-            userInfo=$(curl -sS "$MESHERY_CLOUD_BASE_URL/api/identity/users/profile/$userId" 2>./err1.txt)
-
-            if [[ "$(<err1.txt)" != "" ]]; then
-            >&2 echo "Error fetching User details"
-            >&2 echo "$(<err1.txt)"
-            fi
-
-            echo "$userInfo" > info.json
-
-            userFullName="$(jq -r .first_name info.json) $(jq -r .last_name info.json)"
-            userAvatarURL="$(jq -r .avatar_url info.json)"
-
-          echo "---
-          layout: item
-          name: $patternName
-          userId: $userId
-          userName: $userFullName
-          userAvatarURL: $userAvatarURL
-          type: $patternType
-          compatibility: $compatibility
-          patternId: $designId
-          image: /assets/images/patterns/service-mesh.svg
-          patternInfo: |
-            $patternInfo
-          patternCaveats: |
-            $patternCaveats
-          URL: 'https://raw.githubusercontent.com/meshery/meshery.io/master/$MESHERY_CATALOG_FILES_DIR/$designId.yaml'
-          downloadLink: $designId.yaml
-          ---" > ./collections/_catalog/"$(echo $patternType | tr '[:upper:]' '[:lower:]')"/$designId.md
-          done
-          rm temp.json
-          rm err.txt
-          rm info.json
-          rm err1.txt
       - name: Update Catalog Filters
         if: ${{ success() }}
+        working-directory: ./meshery.io
         run: |
           catalogFilters=$(curl -sS "$MESHERY_CLOUD_BASE_URL/api/catalog/content/filter" 2>./err.txt)
           if [[ "$(<err.txt)" != "" ]]; then
@@ -130,8 +64,6 @@ jobs:
           filterCount=$(echo "$catalogFilters" | jq '.total_count')
           echo "Found $filterCount catalog filters"
 
-          echo "Found $filterCount catalog filters"
-
           for (( idx=0; idx<$filterCount; idx++ ))
           do
             filterId=$(jq -r .[$idx].id temp.json)
@@ -139,13 +71,15 @@ jobs:
             filterCaveats="$(jq -r .[$idx].catalog_data.filter_caveats temp.json)"
             filterType="$(jq -r .[$idx].catalog_data.type temp.json)"
             filterName="$(jq -r .[$idx].name temp.json)"
-            compatibility=""
+            filterImageURL="$(jq -r .[$idx].catalog_data.imageURL temp.json)"
 
+            compatibility=""
+            echo "contentID=$designId" >> $GITHUB_OUTPUT
             # check if directory doesn't exists; then create it
-            if [ ! -d "./collections/_catalog/"$(echo $filterType | tr '[:upper:]' '[:lower:]')"" ]; then
+            if [ ! -d "./collections/_filters/"$(echo $filterType | tr '[:upper:]' '[:lower:]')"" ]; then
               echo "$(echo $filterType | tr '[:upper:]' '[:lower:]') doesn't exist."
-              echo "Creating directory...$(echo $filterType | tr '[:upper:]' '[:lower:]')"
-              mkdir "./collections/_catalog/"$(echo $filterType | tr '[:upper:]' '[:lower:]')""
+               echo "Creating directory...$(echo $filterType | tr '[:upper:]' '[:lower:]')"
+              mkdir "./collections/_filters/"$(echo $filterType | tr '[:upper:]' '[:lower:]')""
             fi
 
             if [[ $filterInfo == "null" ]]; then
@@ -173,11 +107,11 @@ jobs:
             echo "$filterFile" > $MESHERY_CATALOG_FILES_DIR/$filterId.yaml
 
             userId=$(jq -r .[$idx].user_id temp.json)
-            userInfo=$(curl -sS "$MESHERY_CLOUD_BASE_URL/api/identity/users/profile/$userId" 2>./err1.txt)
+            userInfo=$(curl -sS "$MESHERY_CLOUD_BASE_URL/api/identity/users/profile/$userId" 2>>./err.txt)
 
-            if [[ "$(<err1.txt)" != "" ]]; then
-            >&2 echo "Error fetching User details"
-            >&2 echo "$(<err1.txt)"
+            if [[ "$(<err.txt)" != "" ]]; then
+              >&2 echo "Error fetching User details"
+              >&2 echo "$(<err.txt)"
             fi
 
             echo "$userInfo" > info.json
@@ -201,29 +135,61 @@ jobs:
             $filterCaveats
           URL: 'https://raw.githubusercontent.com/meshery/meshery.io/master/$MESHERY_CATALOG_FILES_DIR/$filterId.yaml'
           downloadLink: $filterId.yaml
-          ---" > ./collections/_catalog/"$(echo $filterType | tr '[:upper:]' '[:lower:]')"/$filterId.md
+          ---" > ./collections/_filters/"$(echo $filterType | tr '[:upper:]' '[:lower:]')"/$filterId.md
           done
           rm temp.json
-          rm err.txt
-      - name: Commit
+
+      - name: copy catalog directory to docs
+        run: |
+          mkdir -p meshery/docs/_catalog
+          cp -R meshery.io/collections/_catalog/* meshery/docs/_catalog/
+
+          mkdir -p meshery/docs/catalog
+          cp -R meshery.io/catalog/* meshery/docs/catalog/
+
+      - name: Pull latest changes from meshery/meshery
+        run: |
+          cd meshery
+          git pull origin master
+        
+      - name: Commit changes to meshery/meshery repo
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          file_pattern: catalog/* collections/_catalog/*
+          repository: ./meshery
           commit_user_name: l5io
-          commit_user_email: ci@layer5.io
-          commit_author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          commit_user_email: ci@meshery.io
+          commit_options: "--signoff"
+          commit_message: "[Docs] Update _catalog collection"
+          branch: master
+
+      - name: Pull latest changes from meshery.io
+        run: |
+          cd meshery.io
+          git pull origin master
+
+      - name: Commit changes to meshery.io repo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          repository: ./meshery.io
+          commit_user_name: l5io
+          commit_user_email: ci@meshery.io
           commit_options: '--signoff'
           commit_message: '[Catalog] Update Catalog items'
-  call_meshmap_snapshot:
-    secrets: inherit
-    uses: ./.github/workflows/meshmap.yml
-    needs: [UpdateCloudNativeCatalog]
-    with:
-      designID: ${{ needs.UpdateCloudNativeCatalog.outputs.designID }} 
-      assetLocation: ${{ needs.UpdateCloudNativeCatalog.outputs.assetLocation }}
-  output_resource_url:
-    needs: [call_meshmap_snapshot]
-    runs-on: ubuntu-latest
-    steps:
-    - name: "Resource URL"
-      run: echo ${{needs.call_meshmap_snapshot.outputs.resource_url}}
+          branch: master
+
+      - name: Send Email on Workflow Failure
+        if: ${{ failure() }}
+        uses: dawidd6/action-send-mail@v3.7.1
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: GitHub Actions - Workflow Failure
+          from: |
+            "Catalog Update Workflow" <no-reply@meshery.io>
+          to: developers@meshery.io
+          body: |
+            Meshery's Add Cloud Native Catalog Items <a href="https://github.com/meshery/meshery.io/actions/workflows/add-catalog.yml">workflow</a> encountered error(s). Refer to the attached error log for details or review the [results of the failed workflow](https://github.com/meshery/meshery.io/actions/runs/${{ github.run_id }}).
+
+          attachments: err.txt

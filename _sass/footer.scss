@@ -1,3 +1,5 @@
+@use "./variables.scss" as *;
+@use 'mixins/flexbox' as *;
 .footer-links {
   width: 100%;
   margin: 10px 20px;
@@ -40,10 +42,6 @@
 
       &.google-plus-icon:hover svg {
         fill: #db4437;
-      }
-
-      &.calendar-icon:hover svg {
-        fill: #0073cf;
       }
 
       &.dockerhub-icon:hover svg {
@@ -177,7 +175,9 @@ footer {
     margin: 15px auto;
     color: #ccc;
     font-weight: bold;
+    text-align: start !important;
   }
+  
 
   .footer-columns {
     @extend %flexbox;

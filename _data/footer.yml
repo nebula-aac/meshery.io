@@ -3,8 +3,6 @@
   new_window: true
   social_icon: Community
   links:
-  # - name: Resources
-  #   link: https://layer5.io/resources
   - name: Blog
     link: /blog
     social_icon: Blog
@@ -22,8 +20,8 @@
     link: /programs
     social_icon: Internship
     new_window: true
-  - name: Forum
-    link: http://discuss.meshery.io
+  - name: Discussion Forums
+    link: /community#discussion-forums
     social_icon: Forum
     new_window: true
 - title: Getting Started
@@ -44,12 +42,12 @@
   - name: Docs
     link: https://docs.meshery.io
     new_window: true
-    social_icon: Docs
+    # social_icon: Docs
   - name: Meshery Catalog
     link: /catalog
     new_window: false
-  - name: Cloud Native Resources
-    link: https://layer5.io/resources
+  - name: Tutorials
+    link: https://docs.meshery.io/guides/tutorials
     new_window: true
 
   # - name: Service Mesh Interface
@@ -65,7 +63,7 @@
     social_icon: Twitter
     new_window: true
   - name: YouTube
-    link: https://www.youtube.com/channel/UCFL1af7_wdnhHXL1InzaMvA
+    link: https://www.youtube.com/channel/UCgXlqWDCg-9RP1eckf0s6KA?sub_confirmation=1
     social_icon: YouTube
     new_window: true
   - name: Docker Hub

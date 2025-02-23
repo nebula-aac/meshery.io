@@ -1,5 +1,5 @@
-@import "./mixins/transitions.scss";
-
+@use "./mixins/transitions.scss" as *;
+@use "./variables.scss" as *;
 nav {
 	font-size: .8rem;
 	width: fit-content;
@@ -22,9 +22,11 @@ nav {
 	flex-direction: row;
 	padding: 0 2vw;
 	justify-content: space-between;
+	align-items: center;
 }
 .stellarnav.desktop{
 	display: flex;
+	align-items: center;
 	justify-content: flex-end;
 }
 .stellarnav.mobile{
@@ -35,6 +37,7 @@ nav {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
+	align-items: center;
 	gap: 8px;
 	border-radius: 3px;
 }
@@ -69,11 +72,14 @@ nav {
 		margin: 0px 3px; 
 		color: var(--color-secondary-medium) !important;
 	}
-	cursor: pointer;
+	& { cursor: pointer; }
 }
 
 .nav-mode-icon{
 
+	border: none;
+	background: transparent;      
+	
 	& > img {
 		margin-left: .5rem;
 		width: 2rem;
@@ -125,7 +131,7 @@ a.nav-text:hover {
 
 .stellarnav ul {
 	width:fit-content;
-	margin-top: 0.5rem;
+	// margin-top: 0.5rem;
 	& ul{
   	border-radius: 5px;
 	background-color: var(--color-secondary-light);
@@ -167,25 +173,6 @@ a.nav-text:hover {
 		}
 	}
   
-}
-
-@media screen and (max-width: 1140px){
-	.nav-list {
-		box-shadow: var(--box-shadow-primary);
-		max-height: 250px;
-		overflow-y: scroll;
-		overflow-x: hidden;
-	}
-	.nav-list::-webkit-scrollbar
-	{
-		border-radius: 3px;
-		width: 6px;
-	}
-	.nav-list::-webkit-scrollbar-thumb
-	{
-		background-color: #868e96;
-		border-radius: 3px;
-	}
 }
 
 .nav-item a{
@@ -245,7 +232,6 @@ a.nav-text:hover {
 		translate: 0 -5px;
 		background: transparent;
 		background-color: var(--color-primary-light);
-		max-height: 400px;
 	}
 
 	& li a {
@@ -280,6 +266,6 @@ a.nav-text:hover {
 
 @media screen and (max-width: 839px) {
     .nav-mode-icon {
-        padding-top: 10px;
+        // padding-top: 10px;
     }
 }

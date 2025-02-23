@@ -4,18 +4,20 @@
     --brand-color-primary:#00D3A9;
     --brand-color-secondary:#00B39F;
     --brand-color-secondary-50: rgba(0, 179, 159, .5);
+    --brand-color-tertiary: #477E96;
     --color-white:#fff;
     --color-primary-light:#fff;
     --color-primary-light-dark:#d9e0e2;
     --color-primary-medium-dark: #FFFFFF;
     --color-primary-medium:#f8f9fa;
     --color-primary-dark:#f1f3f5;
-    --color-primary-extra-dark:#d1d5db;
+    --color-primary-extra-dark:#b2b6bd;
+    --color-primary-super-dark: #818c9a;
     --color-secondary-light:#495057;
     --color-secondary-medium:#343a40;
     --color-secondary-dark:#212529;
     --color-grey-light:#868e96;
-    --color-primary-light-tbase:#FFFFFF;
+    --color-primary-light-tbase:#ecf0f3;
     --color-primary-qmeta: #777777;
     --color-primary-qtext: rgb(0,0,0);
     --color-primary-testimonial-wrapper: rgb(250,250,250);
@@ -42,7 +44,16 @@
     --background-image-light: none;
     --scrollbar-color: #3c494f;
 
+    --background-nav-fixed: #e7eff333;
+    --color-nav-fixed: black;
 
+    --action-color-dark: #EBC017;
+    --action-color-dark-hover: #C09E0F;
+    --action-color-light: #FFF3C5;
+
+    --color-summary-background:#bac1c8;
+    --color-summary-background-hover:#8f949a;
+    --color-details-background:#d3d8dd;
 
 }
 
@@ -53,6 +64,7 @@
     --color-primary-medium:#343a40;
     --color-primary-dark:#495057;
     --color-primary-extra-dark:#6c747e;
+    --color-primary-super-dark: #818c9a;
     --color-secondary-light:#fff;
     --color-secondary-medium:#f1f3f5;
     --color-secondary-dark:#f1f3f5;
@@ -83,4 +95,16 @@
     --integrations-bg:#676e76;
     --integrations-3d-bg:#222222;
     --integrations-box-shadow:4px 4px 14px #41454a,
-    -4px -4px 10px #78808a;}
+    -4px -4px 10px #78808a;
+
+    --background-nav-fixed: #15272f80;
+    --color-nav-fixed: white;
+
+    --action-color-dark: #EBC017;
+    --action-color-dark-hover: #C09E0F;
+    --action-color-light: #FFF3C5;
+
+    --color-summary-background:#333;
+    --color-summary-background-hover:#666666;
+    --color-details-background:#282828;
+}

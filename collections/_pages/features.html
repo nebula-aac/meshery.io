@@ -1,6 +1,8 @@
 ---
 layout: page
 permalink: /features
+redirect_from:
+  - /features/
 title: Features
 heading: Your <b>full-service cloud</b> native manager
 description: Adopt and operate all cloud native infrastructure with confidence using Meshery's management features.
@@ -20,8 +22,15 @@ features_table:
       - text: Use known cloud native
         highlight: false
         featureli: true
-      - text:
-        highlight:
+      - text: Continuous synchronization of the Kubernetes configurations, workloads, and cloud-native updates across multiple clusters using known cloud-native practices.
+        highlight: false
+        featureli: true
+      - text: Real-Time Helm Chart Generation for CLI and UI
+        highlight: false
+        featureli: true
+      - text: Effectively coordinate multiple clusters to enhance efficiency and streamline operations seamlessly.
+        highlight: false
+        featureli: true
     call_to_action:
       link: https://docs.meshery.io/tasks/lifecycle-management#lifecycle-management
       text: Learn more
@@ -43,7 +52,7 @@ features_table:
       - text: Version your infrastructure configuration designs
         highlight: false
         featureli: true
-      - text: Visualize and dry-run your deployment with MeshMap
+      - text: Visualize and dry-run your deployment with Kanvas
         highlight: false
         featureli: true
       - text: Apply well-known cloud native designs
@@ -79,7 +88,7 @@ features_table:
         highlight: false
         featureli: true
     call_to_action:
-      link: https://docs.meshery.io/tasks/performance-management
+      link: https://docs.meshery.io/guides/performance-management/managing-performance
       text: Learn more
 <!-- faq:
   - question: What types of payment do you accept?
@@ -89,7 +98,7 @@ features_table:
   - question: Do you offer features for nonprofit organizations?
     answer: Yes, send us a message and we'll set you up on our nonprofit features.
   - question: Questions?
-    answer: Contact us for any further questions at <a href="#">community@layer5.io</a>. -->
+    answer: Contact us for any further questions at <a href="#">community@meshery.io</a>. -->
 ---
 
 <div class="features">
@@ -160,7 +169,7 @@ features_table:
     }
 
     $(document).ready(function () {
-      $.get("https://meshery.layer5.io/api/performance/results/total", function (data, status) {
+      $.get("https://cloud.layer5.io/api/performance/results/total", function (data, status) {
         var testresults = JSON.parse(data);
         document.getElementById("testresults").innerHTML = "&nbsp;" + numberWithCommas(testresults.total_runs) + "&nbsp;";
       });
@@ -189,11 +198,11 @@ features_table:
 <section>
   <div class="container flex">
     <div class="text" style="text-align: center;">
-      <h2>Design and Visualize your Infrastructure with<span class="special-text">MeshMap</span></h2> 
+      <h2>Design and Visualize your Infrastructure with<span class="special-text">Kanvas</span></h2> 
       <p>
-        MeshMap enables all cloud native management operations from `mesheryctl` to Meshery's web-based user interface in visually interactive topology.
+        Kanvas enables all cloud native management operations from `mesheryctl` to Meshery's web-based user interface in visually interactive topology.
         Designing and configuring your service mesh is as easy as dragging and dropping.
-        Learn more about MeshMap <a href="https://docs.meshery.io/concepts/meshmap">here</a>.
+        Learn more about Kanvas <a href="https://docs.meshery.io/extensions/kanvas">here</a>.
       </p>
     </div>
     <div class="image" >

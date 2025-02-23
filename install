@@ -1,4 +1,4 @@
-# Copyright 2023 Meshery Authors
+# Copyright The Meshery Authors.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -123,9 +123,7 @@ if ! command_exists tar; then
 fi
 
 if [ "x${MESHERY_VERSION}" = "x" ] ; then
-  MESHERY_VERSION=$(curl -L -s https://github.com/meshery/meshery/releases/latest | \
-                  grep "meshery/releases/tag/" | head -1 | awk -F '"' '{print $4}' | \
-                  awk -F '/' '{print $NF}' )
+  MESHERY_VERSION=$(curl -L -s https://docs.meshery.io/project/releases/latest)
 fi
 
 if [ "x${MESHERY_VERSION}" = "x" ] ; then
@@ -133,15 +131,23 @@ if [ "x${MESHERY_VERSION}" = "x" ] ; then
   exit;
 fi
 
+# For patch releases, the meshery tar ball will not be generated, so fall back to last stable release
+if [[ "$MESHERY_VERSION" ==  *"patch"* ]] ; then
+    LAST_MESHERY_VERSION=`echo $MESHERY_VERSION | awk -F '-patch' '{print $1}'`
+    printf "Patch release %s is not supported, falling back to last stable release: %s\n\n" "$MESHERY_VERSION" "$LAST_MESHERY_VERSION"
+    MESHERY_VERSION=$LAST_MESHERY_VERSION
+fi
+
 NAME="mesheryctl-${MESHERY_VERSION}"
 URL="https://github.com/meshery/meshery/releases/download/${MESHERY_VERSION}/mesheryctl_${MESHERY_VERSION:1}_${OSEXT}_${OSARCHITECTURE}.tar.gz"
+FILENAME="mesheryctl_${MESHERY_VERSION:1}_${OSEXT}_${OSARCHITECTURE}.tar.gz"
 
 printf "\nDownloading %s for %s...\n\n" "$NAME" "$OSEXT"
 curl -L ${URL} -o ${PWD}/meshery.tar.gz
 
 validFile=`file ${PWD}/meshery.tar.gz | grep 'gzip compressed data'`
 if [ -z "$validFile" ] ; then
-  printf "Unable to download meshery.tar.gz file from ${URL}. Set MESHERY_VERSION environment variable to a different version and re-run. For example: export MESHERY_VERSION=v0.1.6\n"
+  printf "Unable to download '%s' from ${URL}. Set MESHERY_VERSION environment variable to a different version and re-run. For example: export MESHERY_VERSION=v0.9.0\n" "$FILENAME"
   exit;
 fi
 
@@ -229,13 +235,14 @@ fi
 # tanzu
 # app
 # cilium
+# nighthawk
 
 ## Any adapter other than above would be ignored
 if [ ! -z "$ADAPTERS" ]; then
     adapterString=
     for adapter in $ADAPTERS; do
         case $adapter in
-            consul|istio|linkerd|nsm|kuma|osm|cilium)
+            consul|istio|linkerd|nsm|kuma|osm|cilium|nighthawk)
                 adapterString="$adapterString -a meshery-$adapter "
             ;;
             nginx|tanzu)

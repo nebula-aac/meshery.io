@@ -1,4 +1,6 @@
-@import "./mixins/transitions.scss";
+@use  "./mixins/transitions.scss" as *;
+@use "./variables.scss" as *;
+@use 'mixins/flexbox' as *;
 
 .bottom-cta {
   background: linear-gradient(
@@ -224,7 +226,7 @@
 .cncf-section {
   text-align: center;
 
-  .layer5-caption {
+  .project-caption {
     display: inline;
     align-items: inherit;
     justify-content: center;
@@ -393,9 +395,6 @@
     .mail-container {
       // gap: 2rem;
       padding-top: 0px;
-    }
-    .mail-row {
-      // gap: 2rem;
     }
   }
   @media (min-width: 575px) and (max-width: 840px) {
@@ -617,4 +616,11 @@
     padding: 0 0rem;
   }
 }
+}
+
+@media (max-width: 454px) {
+  .multi-cluster-img {
+    width: 100%;
+    height: auto;
+  }
 }
